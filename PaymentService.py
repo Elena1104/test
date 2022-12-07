@@ -48,3 +48,6 @@ class paymentRepository:
 class FeeRepository:
     def save(self):
         return """INSERT INTO fee (user_id, fee) VALUES ('""" + fee.amountInRub + """','""" + fee.user.userId + """')"""
+
+    
+    
