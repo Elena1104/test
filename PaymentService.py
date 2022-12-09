@@ -2,35 +2,35 @@ import mysql.connector
 
 
 class PaymentService:
-    notificationRestClient = NotificationRestClient()
-    cbrRestClient = CbrRestClient()
+    notification_rest_client = NotificationRestClient()
+    cbr_rest_client = CbrRestClient()
 
-    def __init__(self, feeRepository, userRepository):
-        self.feeRepository = feeRepository
-        self.userRepository = userRepository
+    def __init__(self, fee_repository, user_repository):
+        self.fee_repository = fee_repository
+        self.user_repository = user_repository
 
-    def processPayment(self, amount, currency, authToken):
+    def processPayment(self, amount, currency, auth_token):
         myconn = mysql.connector.connect(host="localhost", user="user", password="password",database="database")
         cur = myconn.cursor()
 
-        amountInRub = amount * self.cbrRestClient.doRequest().getRates().get(currency.getCode())
-        userId = AuthenticationService(authToken).getUsetId()
-        user = self.userRepository.findUserById(userId)
-        payment = Payment(amountInRub, user);
+        amount_in_rub = amount * self.cbrRestClient.doRequest().getRates().get(currency.get_code())
+        userId = AuthenticationService(auth_token).get_uset_id()
+        user = self.user_repository.find_user_by_id(user_id)
+        payment = Payment(amount_in_rub, user);
         paymentRepository(cur).save(payment)
-        if amountInRub < 1000:
-            fee = Fee(amountInRub * 0.015, user)
-            cur.execute(self. feeRepository.save(fee))
-        if amountInRub > 1000:
-            fee = Fee(amountInRub * 0.01, user)
-            cur.execute(self. feeRepository.save(fee))
-        if amountInRub > 5000:
-            fee = Fee(amountInRub * 0.005, user)
-            cur.execute(self. feeRepository.save(fee))
+        if amount_in_rub < 1000:
+            fee = Fee(amount_in_rub * 0.015, user)
+            cur.execute(self. fee_repository.save(fee))
+        if amount_in_rub > 1000:
+            fee = Fee(amount_in_rub * 0.01, user)
+            cur.execute(self. fee_repository.save(fee))
+        if amount_in_rub > 5000:
+            fee = Fee(amount_in_rub * 0.005, user)
+            cur.execute(self. fee_repository.save(fee))
 
         myconn.commit()
         try:
-            self.notificationRestClient.notify(payment)
+            self.notification_rest_client.notify(payment)
         except:
             pass
 
@@ -40,14 +40,14 @@ class paymentRepository:
         cur = cur
 
     def save(self, payment):
-        self.cur.execute(self.getInsertQuery(payment.user.id, payment.amountInRub, payment.user.name))
+        self.cur.execute(self.get_insert_query(payment.user.id, payment.amount_in_rub, payment.user.name))
 
-    def getInsertQuery(self, userId, amount, userName):
-        return f"""INSERT INTO payment (user_id, amount, user_name) VALUES ('{userId}','{amount}',{userName})"""
+    def get_insert_query(self, user_id, amount, user_name):
+        return f"""INSERT INTO payment (user_id, amount, user_name) VALUES ('{user_id}','{amount}',{user_name})"""
 
 class FeeRepository:
-    def save(self):
-        return """INSERT INTO fee (user_id, fee) VALUES ('""" + fee.amountInRub + """','""" + fee.user.userId + """')"""
+    def save(self, fee):
+        return """INSERT INTO fee (user_id, fee) VALUES ('""" + fee.amount_in_rub + """','""" + fee.user.user_id + """')"""
 
     
     
