@@ -23,10 +23,10 @@ class PaymentService:
             cur.execute(self. fee_repository.save(fee))
         if amount_in_rub > 1000:
             fee = Fee(amount_in_rub * 0.01, user)
-            cur.execute(self. fee_repository.save(fee))
+            cur.execute(self.fee_repository.save(fee))
         if amount_in_rub > 5000:
             fee = Fee(amount_in_rub * 0.005, user)
-            cur.execute(self. fee_repository.save(fee))
+            cur.execute(self.fee_repository.save(fee))
 
         myconn.commit()
         try:
